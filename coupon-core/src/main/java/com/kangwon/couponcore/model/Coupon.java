@@ -1,5 +1,6 @@
 package com.kangwon.couponcore.model;
 
+import com.kangwon.couponcore.exception.CouponIssueException;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -7,6 +8,9 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
+
+import static com.kangwon.couponcore.exception.ErrorCode.INVALID_COUPON_ISSUE_DATE;
+import static com.kangwon.couponcore.exception.ErrorCode.INVALID_COUPON_ISSUE_QUANTITY;
 
 @Builder
 @NoArgsConstructor
@@ -44,4 +48,28 @@ public class Coupon extends BaseTimeEntity {
     @Column(nullable = false)
     private LocalDateTime dateIssueEnd;
 
+    // 발급 수량 검증
+    public boolean availableIssuedQuantity() {
+        if(totalQuantity == null) {
+            return true;
+        }
+        return totalQuantity > issuedQuantity; // 쿠폰 발급이 가능한 상황 -> true
+    }
+
+    // 발급 기한 검증
+
+    public boolean availableIssueDate() {
+        LocalDateTime now = LocalDateTime.now();
+        return dateIssueStart.isBefore(now) && dateIssueEnd.isAfter(now);
+    }
+
+    public void issue() {
+        if(!availableIssuedQuantity()) {
+            throw new CouponIssueException(INVALID_COUPON_ISSUE_QUANTITY, "발급 가능한 수량을 초과합니다. total: %s, issued: %s".formatted(totalQuantity, issuedQuantity));
+        }
+        if(!availableIssueDate()) {
+            throw new CouponIssueException(INVALID_COUPON_ISSUE_DATE, "발급 가능한 일자가 아닙니다. request: %s, issueStart : %s, issueEnd: %s".formatted(LocalDateTime.now(), dateIssueStart, dateIssueEnd));
+        }
+        issuedQuantity++;
+    }
 }
