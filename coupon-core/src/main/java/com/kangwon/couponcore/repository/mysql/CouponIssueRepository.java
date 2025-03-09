@@ -2,8 +2,6 @@ package com.kangwon.couponcore.repository.mysql;
 
 
 import com.kangwon.couponcore.model.CouponIssue;
-import com.kangwon.couponcore.model.QCouponIssue;
-import com.querydsl.jpa.JPQLQuery;
 import com.querydsl.jpa.JPQLQueryFactory;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;

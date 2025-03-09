@@ -25,7 +25,7 @@ public class CouponIssueService {
     @Transactional
     public void issue(long couponId, long userId) {
         Coupon coupon = findCoupon(couponId);
-        coupon.issue();
+        coupon.issue(); // 쿠폰 발급( 검증 로직 포함 )
         saveCouponIssue(couponId, userId);
 //        publishCouponEvent(coupon);
     }

@@ -1,2 +1,4 @@
-package com.kangwon.couponapi.controller.dto;public class CouponIssueRequestDto {
+package com.kangwon.couponapi.controller.dto;
+
+public record CouponIssueRequestDto(long userId, long couponId) {
 }
