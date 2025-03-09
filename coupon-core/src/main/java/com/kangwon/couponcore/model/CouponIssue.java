@@ -14,8 +14,8 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @Getter
 @Entity
-@Table(name = "coupons")
-public class CouponIssue  extends BaseTimeEntity {
+@Table(name = "coupon_issues")
+public class CouponIssue extends BaseTimeEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
