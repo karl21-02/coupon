@@ -1,6 +1,7 @@
 package com.kangwon.couponapi.service;
 
 import com.kangwon.couponapi.controller.dto.CouponIssueRequestDto;
+import com.kangwon.couponcore.component.DistrubuteLockExecutor;
 import com.kangwon.couponcore.service.CouponIssueService;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
@@ -12,13 +13,13 @@ import org.springframework.stereotype.Service;
 public class CouponIssueRequestService {
 
     private final CouponIssueService couponIssueService;
-
+    private final DistrubuteLockExecutor distrubuteLockExecutor;
     private final Logger log = LoggerFactory.getLogger(this.getClass().getSimpleName());
 
     public void issueRequestV1(CouponIssueRequestDto requestDto) {
-        synchronized (this) {
+        distrubuteLockExecutor.execute("lock_" + requestDto.couponId(), 10000, 10000, () -> {
             couponIssueService.issue(requestDto.couponId(), requestDto.userId());
-        }
+        });
         log.info("쿠폰 발급 완료. couponId: %s, userId: %s".formatted(requestDto.couponId(), requestDto.userId()));
     }
 
