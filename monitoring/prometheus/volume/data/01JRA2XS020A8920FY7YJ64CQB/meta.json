@@ -1,0 +1,17 @@
+{
+	"ulid": "01JRA2XS020A8920FY7YJ64CQB",
+	"minTime": 1743781474507,
+	"maxTime": 1743782400000,
+	"stats": {
+		"numSamples": 28602,
+		"numSeries": 159,
+		"numChunks": 170
+	},
+	"compaction": {
+		"level": 1,
+		"sources": [
+			"01JRA2XS020A8920FY7YJ64CQB"
+		]
+	},
+	"version": 1
+}
