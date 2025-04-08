@@ -64,3 +64,4 @@ spring:
     redis:
       host: PROD_URL
       port: 6380
+

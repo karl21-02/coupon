@@ -3,10 +3,12 @@ package com.kangwon.couponcore.service;
 import com.kangwon.couponcore.exception.CouponIssueException;
 import com.kangwon.couponcore.model.Coupon;
 import com.kangwon.couponcore.model.CouponIssue;
+import com.kangwon.couponcore.model.event.CouponIssueCompleteEvent;
 import com.kangwon.couponcore.repository.mysql.CouponIssueJpaRepository;
 import com.kangwon.couponcore.repository.mysql.CouponIssueRepository;
 import com.kangwon.couponcore.repository.mysql.CouponJpaRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -20,14 +22,20 @@ public class CouponIssueService {
     private final CouponJpaRepository couponJpaRepository;
     private final CouponIssueJpaRepository couponIssueJpaRepository;
     private final CouponIssueRepository couponIssueRepository;
-//    private final ApplicationEventPublisher applicationEventPublisher;
+    private final ApplicationEventPublisher applicationEventPublisher;
 
     @Transactional
     public void issue(long couponId, long userId) {
             Coupon coupon = findCoupon(couponId);
             coupon.issue(); // 쿠폰 발급( 검증 로직 포함 )
             saveCouponIssue(couponId, userId);
-//        publishCouponEvent(coupon);
+            publishCouponEvent(coupon);
+    }
+
+    private void publishCouponEvent(Coupon coupon) {
+        if(coupon.isIssueComplete()) {
+            applicationEventPublisher.publishEvent(new CouponIssueCompleteEvent(coupon.getId()));
+        }
     }
 
     @Transactional(readOnly = true)

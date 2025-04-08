@@ -3,3 +3,13 @@ spring:
     name: coupon-api
 server:
   port: 8082
+
+management:
+  metrics:
+    tags:
+      application:
+        ${spring.application.name}
+  endpoints:
+    web:
+      exposure:
+        include: prometheus
